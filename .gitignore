@@ -1,0 +1,7 @@
+*~
+*.tgz
+.*.sw*
+.DS_Store
+*.o
+a.out
+iwc
