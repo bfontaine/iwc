@@ -2,6 +2,8 @@
 
 `iwc(1)` is an *interactive* `wc(1)`.
 
+Note: this is an early release.
+
 ## Install
 
 ### From the source
