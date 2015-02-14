@@ -49,8 +49,8 @@ man/%.html: man/%.md
 
 clean:
 	find . -name '*.o' -delete
-	rm -f $(BIN)
-	rm -rf *.tmp
+	$(RM) $(BIN)
+	$(RM) -r *.tmp
 
 install: $(BIN) docs
 	@mkdir -p $(BINPREFIX)
@@ -64,14 +64,10 @@ uninstall:
 		rm -f $(MANPREFIX)/$(notdir $(MAN)))
 
 ghpages:
-	@# copied from https://github.com/bfontaine/homer
-	make man/iwc.html
-	cp man/iwc.html /tmp/
-	git stash
-	git checkout gh-pages
-	mv /tmp/iwc.html index.html
-	git add index.html
-	git commit -m "saving man page to GitHub docs"
-	git push origin gh-pages
 	git checkout master
-	git stash pop || true
+	$(MAKE) man/iwc.html
+	git checkout gh-pages
+	git show master:man/iwc.html > index.html
+	git commit -m "saving man page to GitHub docs" index.html
+	git push origin gh-pages
+	git checkout @{-1}
