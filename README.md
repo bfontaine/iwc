@@ -6,6 +6,11 @@ Note: this is an early release.
 
 ## Install
 
+### With Homebrew (OS X)
+
+    brew tap bfontaine/utils
+    brew install iwc
+
 ### From the source
 
     git clone https://github.com/bfontaine/iwc.git
