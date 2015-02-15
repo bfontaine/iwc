@@ -9,70 +9,72 @@
 
 char buf[BUF_SIZE];
 
-int print_help(char *exe) {
-        printf("Usage:\n"
-               "\t%1$s [<options>] [<file>]\n"
-               "\n"
-               "Options:\n"
-               "\t-h: show this help and exit\n"
-               "\t-v: print the version and exit\n"
-               "\n", exe);
-        return 0;
+void iwc_count_chars(int buflen, int *chars) {
+        if (chars != NULL) {
+                *chars += buflen;
+        }
 }
 
-int print_version(void) {
-        printf("iwc(1) - version %s\n", IWC_VERSION);
-        return 0;
-}
+void iwc_count_lines(int buflen, int *lines) {
+        int _lines = 0;
 
-int main(int argc, char **argv) {
+        if (lines == NULL) { return; }
 
-        char lines_count = 0,
-             chars_count = 0,
-             words_count = 0;
-
-        int optch;
-        extern int opterr;
-
-        opterr = 1;
-
-        while ((optch = getopt(argc, argv, "hvclw")) != -1) {
-                switch (optch) {
-                case 'c':
-                        chars_count = 1;
-                        break;
-                case 'l':
-                        lines_count = 1;
-                        break;
-                case 'w':
-                        words_count = 1;
-                        break;
-                case 'h':
-                        return print_help(argv[0]);
-                case 'v':
-                        return print_version();
+        for (int i=0; i<buflen; i++) {
+                if (buf[i] == '\n') {
+                        _lines += 1;
                 }
         }
 
-        if (!chars_count && !lines_count && !words_count) {
-                lines_count = 1;
+        *lines += _lines;
+}
+
+void iwc_count_words(int buflen, int *words) {
+        int _words = 0;
+        char last_was_a_space = 0;
+
+        if (words == NULL) { return; }
+
+        for (int i=0; i<buflen; i++) {
+                char c = buf[i];
+
+                // really simple, just for testing
+                if (!last_was_a_space && (c == '\n' || c == '\r' || c == ' ')) {
+                        last_was_a_space = 1;
+                        _words += 1;
+                } else {
+                        last_was_a_space = 0;
+                }
         }
 
-        int nread = 0;
-        int newlines = 0;
+        *words += _words;
+}
 
-        while ((nread = read(STDIN_FILENO, buf, BUF_SIZE)) > 0) {
-                for (int i=0; i<nread; i++) {
-                        if (buf[i] == '\n') {
-                                newlines += 1;
-                        }
-                }
+void iwc_print_counter(int *chars, int *lines, int *words, char eol) {
+        char printed = 0;
+        if (chars != NULL) { printf("%d ", *chars); printed = 1; }
+        if (lines != NULL) { printf("%d ", *lines); printed = 1; }
+        if (words != NULL) { printf("%d ", *words); printed = 1; }
 
-                printf("%d\r", newlines);
+        if (printed) {
+                printf("%c", eol);
                 fflush(NULL);
         }
+}
 
-        printf("%d\n", newlines);
+int iwc_counts(int fileno, int *chars, int *lines, int *words) {
 
-        return 0;
+        int nread = 0;
+
+        while ((nread = read(fileno, buf, BUF_SIZE)) > 0) {
+                iwc_count_chars(nread, chars);
+                iwc_count_lines(nread, lines);
+                iwc_count_words(nread, words);
+
+                iwc_print_counter(chars, lines, words, '\r');
+        }
+
+        iwc_print_counter(chars, lines, words, '\n');
+
+        return nread;
 }
