@@ -12,6 +12,9 @@ int print_help(char *exe) {
                "Options:\n"
                "\t-h: show this help and exit\n"
                "\t-v: print the version and exit\n"
+               "\t-c: count the number of bytes\n"
+               "\t-l: count the number of lines (default)\n"
+               "\t-w: count the number of words\n"
                "\n", exe);
         return 0;
 }
@@ -24,7 +27,7 @@ int print_version(void) {
 int main(int argc, char **argv) {
 
         char lines_count = 0,
-             chars_count = 0,
+             bytes_count = 0,
              words_count = 0;
 
         int optch;
@@ -35,7 +38,7 @@ int main(int argc, char **argv) {
         while ((optch = getopt(argc, argv, "hvclw")) != -1) {
                 switch (optch) {
                 case 'c':
-                        chars_count = 1;
+                        bytes_count = 1;
                         break;
                 case 'l':
                         lines_count = 1;
@@ -50,18 +53,18 @@ int main(int argc, char **argv) {
                 }
         }
 
-        if (!chars_count && !lines_count && !words_count) {
+        if (!bytes_count && !lines_count && !words_count) {
                 lines_count = 1;
         }
 
-        int chars = 0,
+        int bytes = 0,
             lines = 0,
             words = 0;
 
         int file_no = STDIN_FILENO;
 
         iwc_counts(file_no,
-                        chars_count ? &chars : NULL,
+                        bytes_count ? &bytes : NULL,
                         lines_count ? &lines : NULL,
                         words_count ? &words : NULL);
 
