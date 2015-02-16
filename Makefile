@@ -64,8 +64,6 @@ uninstall:
 		rm -f $(MANPREFIX)/$(notdir $(MAN)))
 
 ghpages:
-	git checkout master
-	$(MAKE) man/iwc.html
 	git checkout gh-pages
 	git show master:man/iwc.html > index.html
 	git commit -m "saving man page to GitHub docs" index.html
