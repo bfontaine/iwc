@@ -34,7 +34,6 @@ void iwc_count_words(int buflen, int *words) {
         for (int i=0; i<buflen; ++i) {
                 char c = buf[i];
 
-                // really simple, just for testing
                 if (!last_was_a_space &&
                                 (c == '\n' ||
                                  c == '\r' ||
