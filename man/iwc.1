@@ -7,7 +7,7 @@
 \fBiwc\fR \- Interactive lines count
 .
 .SH "SYNOPSIS"
-\fBiwc\fR [\fB\-clw\fR]
+\fBiwc\fR [\fB\-clw\fR] [\fIfile\fR \.\.\.]
 .
 .SH "DESCRIPTION"
 The \fBiwc\fR utility displays the number of lines in the standard input\. The number is printed while \fBiwc\fR counts all lines, instead of just displaying the total number at the end\.
@@ -19,20 +19,24 @@ The \fBiwc\fR utility displays the number of lines in the standard input\. The n
 Count the number of bytes in each input file\.
 .
 .TP
-\fB\-l\fR
-Count the number of lines in each input file\. This is the default is no option is specified\.
-.
-.TP
-\fB\-w\fR
-Count the number of words in each input file\.
-.
-.TP
 \fB\-h\fR
 Print the help and exit
 .
 .TP
+\fB\-l\fR
+Count the number of lines in each input file\. This is the default is no option is specified\.
+.
+.TP
+\fB\-m\fR
+Same as \fB\-c\fR for now\.
+.
+.TP
 \fB\-v\fR
 Print the version and exit
+.
+.TP
+\fB\-w\fR
+Count the number of words in each input file\.
 .
 .SH "AUTHOR"
 Written by Baptiste Fontaine <\fIb@ptistefontaine\.fr\fR>\.

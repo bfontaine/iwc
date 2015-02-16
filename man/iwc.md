@@ -2,7 +2,7 @@
 
 ## SYNOPSIS
 
-`iwc` [`-clw`]
+`iwc` [`-clw`] [<file> ...]
 
 ## DESCRIPTION
 
@@ -15,18 +15,21 @@ total number at the end.
   * `-c`:
     Count the number of bytes in each input file.
 
+  * `-h`:
+    Print the help and exit
+
   * `-l`:
     Count the number of lines in each input file. This is the default is no
     option is specified.
 
-  * `-w`:
-    Count the number of words in each input file.
-
-  * `-h`:
-    Print the help and exit
+  * `-m`:
+    Same as `-c` for now.
 
   * `-v`:
     Print the version and exit
+
+  * `-w`:
+    Count the number of words in each input file.
 
 ## AUTHOR
 
