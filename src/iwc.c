@@ -34,14 +34,17 @@ void iwc_count_words(int buflen, int *words) {
         for (int i=0; i<buflen; ++i) {
                 char c = buf[i];
 
-                if (!last_was_a_space &&
-                                (c == '\n' ||
-                                 c == '\r' ||
-                                 c == '\t' ||
-                                 c == '\v' ||
-                                 c == '\f' ||
-                                 c == ' ')) {
+                if (c == '\n' ||
+                    c == '\r' ||
+                    c == '\t' ||
+                    c == '\v' ||
+                    c == '\f' ||
+                    c == ' ') {
+
+                        if (last_was_a_space) { continue; }
+
                         last_was_a_space = 1;
+
                         ++_words;
                 } else {
                         last_was_a_space = 0;
