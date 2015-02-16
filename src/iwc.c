@@ -62,6 +62,10 @@ void iwc_print_counter(int *bytes, int *lines, int *words, char eol) {
         }
 }
 
+void iwc_print_total_counter(int *bytes, int *lines, int *words) {
+        iwc_print_counter(bytes, lines, words, '\n');
+}
+
 int iwc_counts(int fileno, int *bytes, int *lines, int *words) {
 
         int nread = 0;
@@ -73,8 +77,6 @@ int iwc_counts(int fileno, int *bytes, int *lines, int *words) {
 
                 iwc_print_counter(bytes, lines, words, '\r');
         }
-
-        iwc_print_counter(bytes, lines, words, '\n');
 
         return nread;
 }
