@@ -14,7 +14,7 @@ int print_help(char *exe) {
                "\t-h: show this help and exit\n"
                "\t-v: print the version and exit\n"
                "\t-c: count the number of bytes\n"
-               "\t-l: count the number of lines (default)\n"
+               "\t-l: count the number of lines\n"
                "\t-w: count the number of words\n"
                "\t-m: same as -c\n"
                "\n", exe);
@@ -29,8 +29,8 @@ int print_version(void) {
 int main(int argc, char **argv) {
 
         char lines_count = 0,
-             bytes_count = 0,
-             words_count = 0;
+             words_count = 0,
+             bytes_count = 0;
 
         int optch;
         extern int opterr;
@@ -60,25 +60,28 @@ int main(int argc, char **argv) {
                 }
         }
 
-        if (!bytes_count && !lines_count && !words_count) {
+        if (!lines_count && !words_count && !bytes_count) {
                 lines_count = 1;
+                words_count = 1;
+                bytes_count = 1;
         }
 
-        int bytes = 0,
-            lines = 0,
+        int lines = 0,
             words = 0,
+            bytes = 0,
 
             file_no,
 
-            *bc = bytes_count ? &bytes : NULL,
             *lc = lines_count ? &lines : NULL,
-            *wc = words_count ? &words : NULL;
+            *wc = words_count ? &words : NULL,
+            *bc = bytes_count ? &bytes : NULL;
 
 
         if (optind == argc) {
-                iwc_counts(STDIN_FILENO, bc, lc, wc);
-                iwc_print_total_counter(bc, lc, wc);
-                return 0;
+                if (iwc_counts(STDIN_FILENO, lc, wc, bc) == -1) {
+                        perror("read");
+                        return 1;
+                }
         }
 
         for (int i=optind; i < argc; i++) {
@@ -89,9 +92,12 @@ int main(int argc, char **argv) {
                         return 1;
                 }
 
-                iwc_counts(file_no, bc, lc, wc);
+                if (iwc_counts(file_no, lc, wc, bc) == -1) {
+                        perror("read");
+                        return 1;
+                }
         }
-        iwc_print_total_counter(bc, lc, wc);
+        iwc_print_total_counter(lc, wc, bc);
 
         return 0;
 }

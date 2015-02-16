@@ -2,15 +2,17 @@
 
 ## SYNOPSIS
 
-`iwc` [`-clw`] [<file> ...]
+`iwc` [`-chlvw`] [<file> ...]
 
 ## DESCRIPTION
 
-The `iwc` utility displays the number of lines in the standard input. The
-number is printed while `iwc` counts all lines, instead of just displaying the
-total number at the end.
+The `iwc` utility displays the number of lines, words and bytes in the standard
+input. The number is printed while `iwc` counts all lines, instead of just
+displaying the total number at the end.
 
 ## OPTIONS
+
+Not passing any option is equivalent to passing `-clw`.
 
   * `-c`:
     Count the number of bytes in each input file.
@@ -19,8 +21,7 @@ total number at the end.
     Print the help and exit
 
   * `-l`:
-    Count the number of lines in each input file. This is the default is no
-    option is specified.
+    Count the number of lines in each input file.
 
   * `-m`:
     Same as `-c` for now.
