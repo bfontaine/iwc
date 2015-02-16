@@ -1,5 +1,9 @@
 # iwc Changelog
 
+## v0.1.2 (upcoming version)
+
+* Words count fixed, it now matches `wc`’s.
+
 ## v0.1.1 (2015-02-17)
 
 * The read buffer is now 16k instead of 1k

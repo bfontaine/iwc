@@ -1,3 +1,3 @@
 #ifndef IWC_VERSION
-#define IWC_VERSION "0.1.1"
+#define IWC_VERSION "0.1.2"
 #endif
