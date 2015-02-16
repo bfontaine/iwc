@@ -1,8 +1,10 @@
 # iwc(1)
 
-`iwc(1)` is an *interactive* `wc(1)`.
+[![Build Status](https://travis-ci.org/bfontaine/iwc.svg?branch=master)](https://travis-ci.org/bfontaine/iwc)
 
-Note: this is an early release.
+`iwc(1)` is an *interactive* `wc(1)`. It (mostly) works like the original `wc`
+but prints the lines number as it counts them instead of waiting for the end to
+print it.
 
 ## Install
 
@@ -19,9 +21,9 @@ Note: this is an early release.
 
 ## Usage
 
-    $ cat myfile.txt | iwc
+    $ iwc myfile.txt
 
-See [the man page][man] to see all available options as well as usage examples.
+See [the man page][man] to see all available options.
 
 [man]: https://bfontaine.github.io/iwc
 

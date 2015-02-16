@@ -1,0 +1,9 @@
+language: c
+install: sudo make install
+script:
+  - true
+notifications:
+  email: false
+compiler:
+  - clang
+  - gcc
