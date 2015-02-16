@@ -20,13 +20,10 @@ BIN:=iwc
 CFLAGS=-Wall -Wextra -Wundef -Wpointer-arith -std=gnu99
 LDFLAGS=
 
-CPPCHECK_VER:=$(shell cppcheck --version 2>/dev/null)
-ifdef CPPCHECK_VER
-CPPCHECK=cppcheck \
-	--enable=warning,style \
-	--language=c -q
-else
-CPPCHECK=\#
+RONN=ronn
+
+ifdef TRAVIS
+RONN=\#
 endif
 
 all: $(BIN) docs
@@ -42,10 +39,10 @@ $(SRC)/cli.o: $(SRC)/version.h
 docs: $(MAN_PAGES)
 
 man/%.1: man/%.md
-	ronn -rw --manual "iwc Manual" --pipe $< > $@
+	$(RONN) -rw --manual "iwc Manual" --pipe $< > $@
 
 man/%.html: man/%.md
-	ronn -w5 -s toc --manual "iwc Manual" --pipe $< > $@
+	$(RONN) -w5 -s toc --manual "iwc Manual" --pipe $< > $@
 
 clean:
 	find . -name '*.o' -delete
