@@ -25,7 +25,7 @@ print it.
 
     $ iwc myfile.txt
 
-See [the man page][man] to see all available options.
+See [the man page][man] for all available options.
 
 [man]: https://bfontaine.github.io/iwc
 
