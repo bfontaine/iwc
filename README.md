@@ -6,6 +6,8 @@
 but prints the lines number as it counts them instead of waiting for the end to
 print it.
 
+![](https://github.com/bfontaine/iwc/raw/master/imgs/iwc.png)
+
 ## Install
 
 ### With Homebrew (OS X)
