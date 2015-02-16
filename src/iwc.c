@@ -6,7 +6,8 @@
 #include "iwc.h"
 #include "version.h"
 
-#define BUF_SIZE 1024
+// this is the size `wc` is using
+#define BUF_SIZE (16 * 1024)
 
 char buf[BUF_SIZE];
 
