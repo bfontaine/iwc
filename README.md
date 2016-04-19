@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/bfontaine/iwc.svg?branch=master)](https://travis-ci.org/bfontaine/iwc)
 
-`iwc(1)` is an *interactive* `wc(1)`. It (mostly) works like the original `wc`
+`iwc(1)` is an *interactive* `wc(1)`. It works (mostly) like the original `wc`
 but prints the lines number as it counts them instead of waiting for the end to
 print it.
 
@@ -12,13 +12,11 @@ print it.
 
 ### With Homebrew (OS X)
 
-    brew tap bfontaine/utils
-    brew install iwc
+    brew install bfontaine/utils/iwc
 
 ### From the source
 
-    git clone https://github.com/bfontaine/iwc.git
-    cd iwc
+    git clone https://github.com/bfontaine/iwc.git && cd iwc
     [sudo] make install
 
 ## Usage
