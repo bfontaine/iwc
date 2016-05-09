@@ -11,7 +11,7 @@
 
 char buf[BUF_SIZE];
 
-void iwc_count_lines(int buflen, int *lines) {
+void iwc_count_lines(int buflen, counter_t *lines) {
         int _lines = 0;
         char *p = buf;
 
@@ -25,7 +25,7 @@ void iwc_count_lines(int buflen, int *lines) {
         *lines += _lines;
 }
 
-void iwc_count_words(int buflen, int *words) {
+void iwc_count_words(int buflen, counter_t *words) {
         int _words = 0;
         char last_was_a_space = 0;
 
@@ -54,17 +54,18 @@ void iwc_count_words(int buflen, int *words) {
         *words += _words;
 }
 
-void iwc_count_bytes(int buflen, int *bytes) {
+void iwc_count_bytes(int buflen, counter_t *bytes) {
         if (bytes != NULL) {
                 *bytes += buflen;
         }
 }
 
-void iwc_print_counter(int *lines, int *words, int *bytes, char eol) {
+void iwc_print_counter(counter_t *lines, counter_t *words, counter_t *bytes,
+                char eol) {
         char printed = 0;
-        if (lines != NULL) { printf(" %7d", *lines); printed = 1; }
-        if (words != NULL) { printf(" %7d", *words); printed = 1; }
-        if (bytes != NULL) { printf(" %7d", *bytes); printed = 1; }
+        if (lines != NULL) { printf(COUNTER_FMT, *lines); printed = 1; }
+        if (words != NULL) { printf(COUNTER_FMT, *words); printed = 1; }
+        if (bytes != NULL) { printf(COUNTER_FMT, *bytes); printed = 1; }
 
         if (printed) {
                 printf("%c", eol);
@@ -72,11 +73,13 @@ void iwc_print_counter(int *lines, int *words, int *bytes, char eol) {
         }
 }
 
-void iwc_print_total_counter(int *lines, int *words, int *bytes) {
+void iwc_print_total_counter(counter_t *lines, counter_t *words,
+                counter_t *bytes) {
         iwc_print_counter(lines, words, bytes, '\n');
 }
 
-int iwc_counts(int fileno, int *lines, int *words, int *bytes) {
+int iwc_counts(int fileno, counter_t *lines, counter_t *words,
+                counter_t *bytes) {
 
         int nread = 0;
 

@@ -66,15 +66,15 @@ int main(int argc, char **argv) {
                 bytes_count = 1;
         }
 
-        int lines = 0,
-            words = 0,
-            bytes = 0,
+        int file_no = 0;
 
-            file_no,
+        counter_t lines = 0,
+                  words = 0,
+                  bytes = 0,
 
-            *lc = lines_count ? &lines : NULL,
-            *wc = words_count ? &words : NULL,
-            *bc = bytes_count ? &bytes : NULL;
+                  *lc = lines_count ? &lines : NULL,
+                  *wc = words_count ? &words : NULL,
+                  *bc = bytes_count ? &bytes : NULL;
 
 
         if (optind == argc) {
