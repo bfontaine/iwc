@@ -27,28 +27,29 @@ int print_version(void) {
 }
 
 int main(int argc, char **argv) {
-
-        char lines_count = 0,
-             words_count = 0,
-             bytes_count = 0;
-
         int optch;
         extern int opterr;
 
         opterr = 1;
+
+        counter_t *counter = iwc_make_counter();
+
+        if (counter == NULL) {
+                return 1;
+        }
 
         while ((optch = getopt(argc, argv, "hvmclw")) != -1) {
                 switch (optch) {
                 case 'm':
                         // we don't do anything specific here for now
                 case 'c':
-                        bytes_count = 1;
+                        counter->count_bytes = 1;
                         break;
                 case 'l':
-                        lines_count = 1;
+                        counter->count_lines = 1;
                         break;
                 case 'w':
-                        words_count = 1;
+                        counter->count_words = 1;
                         break;
                 case 'h':
                         return print_help(argv[0]);
@@ -60,44 +61,45 @@ int main(int argc, char **argv) {
                 }
         }
 
-        if (!lines_count && !words_count && !bytes_count) {
-                lines_count = 1;
-                words_count = 1;
-                bytes_count = 1;
+        if (!counter->count_lines && !counter->count_words &&
+                        !counter->count_bytes) {
+                counter->count_lines = 1;
+                counter->count_words = 1;
+                counter->count_bytes = 1;
         }
 
-        int file_no = 0;
-
-        counter_t lines = 0,
-                  words = 0,
-                  bytes = 0,
-
-                  *lc = lines_count ? &lines : NULL,
-                  *wc = words_count ? &words : NULL,
-                  *bc = bytes_count ? &bytes : NULL;
-
+        int fileno = 0,
+            result = 0;
 
         if (optind == argc) {
-                if (iwc_counts(STDIN_FILENO, lc, wc, bc) == -1) {
-                        perror("read");
-                        return 1;
+                result = iwc_count(counter, STDIN_FILENO);
+                if (result != 0) {
+                        goto end;
                 }
         }
 
         for (int i=optind; i < argc; i++) {
-                file_no = open(argv[i], O_RDONLY);
 
-                if (file_no == -1) {
+                fileno = open(argv[i], O_RDONLY);
+
+                if (fileno == -1) {
                         perror("open");
                         return 1;
                 }
 
-                if (iwc_counts(file_no, lc, wc, bc) == -1) {
-                        perror("read");
+                result = iwc_count(counter, fileno);
+                if (result != 0) {
+                        goto end;
+                }
+
+                if (close(fileno) == -1) {
+                        perror("close");
                         return 1;
                 }
         }
-        iwc_print_total_counter(lc, wc, bc);
+        iwc_print_total(counter);
 
-        return 0;
+end:
+        iwc_destroy_counter(counter);
+        return result;
 }

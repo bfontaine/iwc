@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
@@ -9,87 +10,123 @@
 // this is the size `wc` is using
 #define BUF_SIZE (16 * 1024)
 
-char buf[BUF_SIZE];
+counter_t *iwc_make_counter(void) {
+        counter_t *c = (counter_t*)malloc(sizeof(counter_t));
 
-void iwc_count_lines(int buflen, counter_t *lines) {
+        if (c == NULL) {
+                perror("malloc");
+                return NULL;
+        }
+
+        memset(c, 0, sizeof(*c));
+
+        c->buf = (char*)malloc(sizeof(char) * BUF_SIZE);
+
+        if (c->buf == NULL) {
+                perror("malloc");
+                goto error;
+        }
+
+        return c;
+error:
+        iwc_destroy_counter(c);
+        return NULL;
+}
+
+void iwc_destroy_counter(counter_t *c) {
+        if (c == NULL) {
+                return;
+        }
+        free(c->buf);
+        free(c);
+}
+
+void iwc_update_lines_count(counter_t *c) {
         int _lines = 0;
-        char *p = buf;
+        char *p = c->buf;
 
-        if (lines == NULL) { return; }
+        if (!c->count_lines || c->buflen == EOF) { return; }
 
-        while ((p = memchr(p, '\n', (buf + buflen) - p))) {
+        while ((p = memchr(p, '\n', (c->buf + c->buflen) - p))) {
                 ++p;
                 ++_lines;
         }
 
-        *lines += _lines;
+        c->lines += _lines;
 }
 
-void iwc_count_words(int buflen, counter_t *words) {
+void iwc_update_words_count(counter_t *c) {
         int _words = 0;
-        char last_was_a_space = 0;
 
-        if (words == NULL) { return; }
+        if (!c->count_words) { return; }
 
-        for (int i=0; i<buflen; ++i) {
-                char c = buf[i];
+        if (c->buflen == EOF) {
+                if (!c->last_char_was_a_space && !c->pristine) {
+                        ++(c->words);
+                }
+                return;
+        }
 
-                if (c == '\n' ||
-                    c == '\r' ||
-                    c == '\t' ||
-                    c == '\v' ||
-                    c == '\f' ||
-                    c == ' ') {
+        for (int i=0; i<c->buflen; ++i) {
+                char ch = c->buf[i];
 
-                        if (last_was_a_space) { continue; }
+                if (ch == '\n' ||
+                    ch == '\r' ||
+                    ch == '\t' ||
+                    ch == '\v' ||
+                    ch == '\f' ||
+                    ch == ' ') {
 
-                        last_was_a_space = 1;
+                        if (c->last_char_was_a_space) { continue; }
 
-                        ++_words;
+                        c->last_char_was_a_space = 1;
+
+                        if (!c->pristine) { ++_words; }
                 } else {
-                        last_was_a_space = 0;
+                        c->last_char_was_a_space = 0;
                 }
         }
 
-        *words += _words;
+        c->words += _words;
 }
 
-void iwc_count_bytes(int buflen, counter_t *bytes) {
-        if (bytes != NULL) {
-                *bytes += buflen;
+void iwc_update_bytes_count(counter_t *c) {
+        if (c->count_bytes) {
+                c->bytes += c->buflen;
         }
 }
 
-void iwc_print_counter(counter_t *lines, counter_t *words, counter_t *bytes,
-                char eol) {
-        char printed = 0;
-        if (lines != NULL) { printf(COUNTER_FMT, *lines); printed = 1; }
-        if (words != NULL) { printf(COUNTER_FMT, *words); printed = 1; }
-        if (bytes != NULL) { printf(COUNTER_FMT, *bytes); printed = 1; }
+void iwc_print_counter(counter_t *c, char eol) {
+        if (c->count_lines) { printf(COUNTER_FMT, c->lines); }
+        if (c->count_words) { printf(COUNTER_FMT, c->words); }
+        if (c->count_bytes) { printf(COUNTER_FMT, c->bytes); }
 
-        if (printed) {
-                printf("%c", eol);
-                fflush(NULL);
-        }
+        putchar(eol);
+        fflush(NULL);
 }
 
-void iwc_print_total_counter(counter_t *lines, counter_t *words,
-                counter_t *bytes) {
-        iwc_print_counter(lines, words, bytes, '\n');
-}
+int iwc_count(counter_t *c, int fileno) {
+        int ret = 0;
 
-int iwc_counts(int fileno, counter_t *lines, counter_t *words,
-                counter_t *bytes) {
+        while ((c->buflen = read(fileno, c->buf, BUF_SIZE)) >= 0) {
+                iwc_update_bytes_count(c);
+                iwc_update_words_count(c);
+                iwc_update_lines_count(c);
 
-        int nread = 0;
+                c->pristine = 0;
 
-        while ((nread = read(fileno, buf, BUF_SIZE)) > 0) {
-                iwc_count_lines(nread, lines);
-                iwc_count_words(nread, words);
-                iwc_count_bytes(nread, bytes);
+                iwc_print_counter(c, '\r');
 
-                iwc_print_counter(lines, words, bytes, '\r');
+                if (c->buflen == 0) {
+                        break;
+                }
         }
 
-        return nread;
+        ret = c->buflen;
+        c->buflen = 0;
+        return ret;
+}
+
+void iwc_print_total(counter_t *c) {
+        iwc_print_counter(c, '\n');
 }
