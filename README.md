@@ -27,6 +27,13 @@ See [the man page][man] for all available options.
 
 [man]: https://bfontaine.github.io/iwc
 
+### Examples
+
+You can combine `iwc` with `tail -f` to follow the number of lines in a file
+that’s constantly growing (like logs):
+
+    $ tail -f -n +1 your_file | iwc -l
+
 ## License
 
 [MIT][LICENSE].
