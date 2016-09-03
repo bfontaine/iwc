@@ -96,6 +96,11 @@ int main(int argc, char **argv) {
                         perror("read");
                         return 1;
                 }
+
+                if (close(file_no) == -1) {
+                        perror("close");
+                        return 1;
+                }
         }
         iwc_print_total_counter(lc, wc, bc);
 
