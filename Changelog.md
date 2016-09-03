@@ -3,6 +3,7 @@
 ## v0.1.2 (upcoming version)
 
 * Words count fixed, it now matches `wc`’s.
+* Files are now properly closed.
 
 ## v0.1.1 (2015-02-17)
 
