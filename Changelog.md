@@ -1,6 +1,6 @@
 # iwc Changelog
 
-## v0.1.2 (upcoming version)
+## v0.1.2 (2016-09-16)
 
 * Words count fixed, it now matches `wc`’s.
 * Files are now properly closed.
