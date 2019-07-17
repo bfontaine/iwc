@@ -4,6 +4,8 @@
 #define counter_t unsigned long long
 #define COUNTER_FMT " %7llu"
 
+int iwc_error(int res);
+
 void iwc_count_bytes(int buflen, counter_t *bytes);
 void iwc_count_lines(int buflen, counter_t *lines);
 void iwc_count_words(int buflen, counter_t *words);

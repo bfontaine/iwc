@@ -32,7 +32,8 @@ int main(int argc, char **argv) {
              words_count = 0,
              bytes_count = 0;
 
-        int optch;
+        int optch,
+            res;
         extern int opterr;
 
         opterr = 1;
@@ -77,9 +78,9 @@ int main(int argc, char **argv) {
 
 
         if (optind == argc) {
-                if (iwc_counts(STDIN_FILENO, lc, wc, bc) == -1) {
-                        perror("read");
-                        return 1;
+                res = iwc_counts(STDIN_FILENO, lc, wc, bc);
+                if (res < 0) {
+                        return iwc_error(res);
                 }
         }
 
@@ -91,9 +92,9 @@ int main(int argc, char **argv) {
                         return 1;
                 }
 
-                if (iwc_counts(file_no, lc, wc, bc) == -1) {
-                        perror("read");
-                        return 1;
+                res = iwc_counts(file_no, lc, wc, bc);
+                if (res < 0) {
+                        return iwc_error(res);
                 }
 
                 if (close(file_no) == -1) {

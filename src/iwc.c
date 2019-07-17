@@ -81,15 +81,52 @@ void iwc_print_total_counter(counter_t *lines, counter_t *words,
 int iwc_counts(int fileno, counter_t *lines, counter_t *words,
                 counter_t *bytes) {
 
-        int nread = 0;
+        int nread = 0,
+            known_size = 0;
+        off_t size = -1;
+
+        size = lseek(fileno, 0, SEEK_END);
+
+        if (size >= 0) {
+                if (bytes != NULL) {
+                        *bytes += size;
+
+                        // shortcut for `iwc -c somefile`
+                        if (lines == NULL && words == NULL) {
+                                return 0;
+                        }
+                }
+
+                known_size = 1;
+
+                if (lseek(fileno, 0, SEEK_SET) != 0) {
+                        return -2;
+                }
+        }
 
         while ((nread = read(fileno, buf, BUF_SIZE)) > 0) {
                 iwc_count_lines(nread, lines);
                 iwc_count_words(nread, words);
-                iwc_count_bytes(nread, bytes);
+
+                if (!known_size) {
+                        iwc_count_bytes(nread, bytes);
+                }
 
                 iwc_print_counter(lines, words, bytes, '\r');
         }
 
         return nread;
+}
+
+int iwc_error(int res) {
+        switch(res) {
+        case -1:
+                perror("read");
+                return -1;
+        case -2:
+                perror("lseek");
+                return -1;
+        default:
+                return 0;
+        }
 }
