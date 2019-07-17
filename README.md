@@ -17,6 +17,7 @@ print it.
 ### From the source
 
     git clone https://github.com/bfontaine/iwc.git && cd iwc
+    git checkout v0.1.3  # last stable version
     [sudo] make install
 
 ## Usage

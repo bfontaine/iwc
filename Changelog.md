@@ -1,5 +1,9 @@
 # iwc Changelog
 
+## Unreleased
+
+* Optimize `iwc -c` by getting the file size when we can
+
 ## v0.1.3 (2016-09-16)
 
 * Files are now properly closed.
