@@ -24,7 +24,7 @@ Not passing any option is equivalent to passing `-clw`.
     Count the number of lines in each input file.
 
   * `-m`:
-    Same as `-c` for now.
+    Same as `-c`.
 
   * `-v`:
     Print the version and exit

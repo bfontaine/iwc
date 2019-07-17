@@ -40,7 +40,6 @@ int main(int argc, char **argv) {
         while ((optch = getopt(argc, argv, "hvmclw")) != -1) {
                 switch (optch) {
                 case 'm':
-                        // we don't do anything specific here for now
                 case 'c':
                         bytes_count = 1;
                         break;

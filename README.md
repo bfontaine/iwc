@@ -10,7 +10,7 @@ print it.
 
 ## Install
 
-### With Homebrew (OS X)
+### With Homebrew (macOS)
 
     brew install bfontaine/utils/iwc
 
