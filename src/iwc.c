@@ -61,10 +61,23 @@ void iwc_count_bytes(int buflen, counter_t *bytes) {
 }
 
 void iwc_print_counter(counter_t *lines, counter_t *words, counter_t *bytes,
+                double multiplier,
                 char eol) {
+
         char printed = 0;
-        if (lines != NULL) { printf(COUNTER_FMT, *lines); printed = 1; }
-        if (words != NULL) { printf(COUNTER_FMT, *words); printed = 1; }
+
+        if (multiplier < 1) { multiplier = 1; }
+
+        if (lines != NULL) {
+                printf(COUNTER_FMT, (counter_t)(*lines * multiplier));
+                printed = 1;
+        }
+
+        if (words != NULL) {
+                printf(COUNTER_FMT, (counter_t)(*words * multiplier));
+                printed = 1;
+        }
+
         if (bytes != NULL) { printf(COUNTER_FMT, *bytes); printed = 1; }
 
         if (printed) {
@@ -75,19 +88,23 @@ void iwc_print_counter(counter_t *lines, counter_t *words, counter_t *bytes,
 
 void iwc_print_total_counter(counter_t *lines, counter_t *words,
                 counter_t *bytes) {
-        iwc_print_counter(lines, words, bytes, '\n');
+        iwc_print_counter(lines, words, bytes, 1, '\n');
 }
 
 int iwc_counts(int fileno, counter_t *lines, counter_t *words,
                 counter_t *bytes) {
 
-        int nread = 0,
-            known_size = 0;
+        int nread = 0;
         off_t size = -1;
+
+        counter_t total_read = 0;
+
+        double multiplier = 1,
+               known_size = 0;
 
         size = lseek(fileno, 0, SEEK_END);
 
-        if (size >= 0) {
+        if (size > 0) {
                 if (bytes != NULL) {
                         *bytes += size;
 
@@ -97,7 +114,7 @@ int iwc_counts(int fileno, counter_t *lines, counter_t *words,
                         }
                 }
 
-                known_size = 1;
+                known_size += size;
 
                 if (lseek(fileno, 0, SEEK_SET) != 0) {
                         return -2;
@@ -110,9 +127,12 @@ int iwc_counts(int fileno, counter_t *lines, counter_t *words,
 
                 if (!known_size) {
                         iwc_count_bytes(nread, bytes);
+                } else {
+                        total_read += nread;
+                        multiplier = known_size / total_read ;
                 }
 
-                iwc_print_counter(lines, words, bytes, '\r');
+                iwc_print_counter(lines, words, bytes, multiplier, '\r');
         }
 
         return nread;

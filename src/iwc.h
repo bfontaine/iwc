@@ -14,6 +14,7 @@ int iwc_counts(int fileno, counter_t *lines, counter_t *words,
                 counter_t *bytes);
 
 void iwc_print_counter(counter_t *lines, counter_t *words, counter_t *bytes,
+                double multiplier,
                 char eol);
 void iwc_print_total_counter(counter_t *lines, counter_t *words,
                 counter_t *bytes);
