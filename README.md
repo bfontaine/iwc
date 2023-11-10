@@ -2,19 +2,18 @@
 
 [![Build Status](https://travis-ci.org/bfontaine/iwc.svg?branch=master)](https://travis-ci.org/bfontaine/iwc)
 
-`iwc(1)` is an *interactive* `wc(1)`. It works (mostly) like the original `wc`
-but prints the lines number as it counts them instead of waiting for the end to
-print it.
+`iwc(1)` is an interactive `wc(1)`. It mostly works like the original `wc` but prints the lines number as it counts them
+instead of waiting for the end to print it.
 
 ![](https://github.com/bfontaine/iwc/raw/master/imgs/iwc.gif)
 
 ## Install
 
-### With Homebrew (macOS)
+### With Homebrew
 
     brew install bfontaine/utils/iwc
 
-### From the source
+### From source
 
     git clone https://github.com/bfontaine/iwc.git && cd iwc
     git checkout v0.1.3  # last stable version
@@ -37,6 +36,4 @@ that’s constantly growing (like logs):
 
 ## License
 
-[MIT][LICENSE].
-
-[LICENSE]: https://github.com/bfontaine/iwc/blob/master/LICENSE
+[MIT](https://github.com/bfontaine/iwc/blob/master/LICENSE)
